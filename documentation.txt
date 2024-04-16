@@ -1,38 +1,37 @@
-public class StringCompression {
-    public static String compressString(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
+import java.util.ArrayList;
+import java.util.List;
 
-        StringBuilder compressed = new StringBuilder();
-        int count = 1;
-        char currentChar = input.charAt(0);
-
-        for (int i = 1; i < input.length(); i++) {
-            char nextChar = input.charAt(i);
-            if (nextChar == currentChar) {
-                count++;
-            } else {
-                compressed.append(currentChar);
-                if (count > 1) {
-                    compressed.append(count);
+public class SubstringCombinations {
+    public static List<List<Integer>> findSubstringCombinations(String string1, String string2) {
+        List<List<Integer>> combinations = new ArrayList<>();
+        
+        for (int i = 0; i < string2.length(); i++) {
+            for (int j = i + string1.length(); j <= string2.length(); j++) {
+                String substring = string2.substring(i, j);
+                if (substring.equals(string1)) {
+                    List<Integer> combination = new ArrayList<>();
+                    for (int k = i + 1; k <= j; k++) {
+                        combination.add(k);
+                    }
+                    combinations.add(combination);
                 }
-                count = 1;
-                currentChar = nextChar;
             }
         }
-
-        compressed.append(currentChar);
-        if (count > 1) {
-            compressed.append(count);
-        }
-
-        return compressed.toString();
+        
+        return combinations;
     }
 
     public static void main(String[] args) {
-        String input = "abbcdddeef";
-        String compressedString = compressString(input);
-        System.out.println("Compressed string: " + compressedString);
+        String string1 = "abc";
+        String string2 = "abcbabc";
+        
+        List<List<Integer>> combinations = findSubstringCombinations(string1, string2);
+        
+        System.out.println("String1 is in string2 with below mentioned combinations locations:");
+        for (List<Integer> combination : combinations) {
+            System.out.println(combination);
+        }
+        
+        System.out.println("Hence it has " + combinations.size() + " matching counts.");
     }
 }
