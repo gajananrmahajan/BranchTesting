@@ -4,34 +4,33 @@ import java.util.List;
 public class SubstringCombinations {
     public static List<List<Integer>> findSubstringCombinations(String string1, String string2) {
         List<List<Integer>> combinations = new ArrayList<>();
-        
-        for (int i = 0; i < string2.length(); i++) {
-            for (int j = i + string1.length(); j <= string2.length(); j++) {
-                String substring = string2.substring(i, j);
-                if (substring.equals(string1)) {
-                    List<Integer> combination = new ArrayList<>();
-                    for (int k = i + 1; k <= j; k++) {
-                        combination.add(k);
-                    }
-                    combinations.add(combination);
+        int len1 = string1.length();
+        int len2 = string2.length();
+
+        for (int i = 0; i <= len2 - len1; i++) {
+            if (string2.substring(i, i + len1).equals(string1)) {
+                List<Integer> combination = new ArrayList<>();
+                for (int j = i + 1; j <= i + len1; j++) {
+                    combination.add(j);
                 }
+                combinations.add(combination);
             }
         }
-        
+
         return combinations;
     }
 
     public static void main(String[] args) {
         String string1 = "abc";
         String string2 = "abcbabc";
-        
+
         List<List<Integer>> combinations = findSubstringCombinations(string1, string2);
-        
+
         System.out.println("String1 is in string2 with below mentioned combinations locations:");
         for (List<Integer> combination : combinations) {
             System.out.println(combination);
         }
-        
+
         System.out.println("Hence it has " + combinations.size() + " matching counts.");
     }
 }
