@@ -1,33 +1,38 @@
-Steps to create a tag in Git
-ChatGPT
-Creating a tag in Git allows you to mark a specific point in your repository's history, typically to indicate a release, a significant commit, or any other important milestone. Here are the steps to create a tag in Git:
+public class StringCompression {
+    public static String compressString(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
 
-Navigate to your Git repository: Open your terminal or command prompt and navigate to the directory containing your Git repository.
+        StringBuilder compressed = new StringBuilder();
+        int count = 1;
+        char currentChar = input.charAt(0);
 
-Ensure you're on the desired commit: Before creating a tag, ensure you're on the commit that you want to tag. You can use git log to view the commit history and identify the commit you want to tag.
+        for (int i = 1; i < input.length(); i++) {
+            char nextChar = input.charAt(i);
+            if (nextChar == currentChar) {
+                count++;
+            } else {
+                compressed.append(currentChar);
+                if (count > 1) {
+                    compressed.append(count);
+                }
+                count = 1;
+                currentChar = nextChar;
+            }
+        }
 
-Choose a tag name: Decide on a name for your tag. Tag names can be any string, but it's common to use semantic versioning (e.g., v1.0.0) for releases or descriptive names for milestones.
+        compressed.append(currentChar);
+        if (count > 1) {
+            compressed.append(count);
+        }
 
-Create the tag: Use the git tag command followed by the chosen tag name. For example:
+        return compressed.toString();
+    }
 
-bash
-Copy code
-git tag v1.0.0
-If you want to include a message with the tag, you can use the -a option to create an annotated tag:
-
-bash
-Copy code
-git tag -a v1.0.0 -m "Release version 1.0.0"
-Push the tag to the remote repository (if needed): By default, tags are only stored locally. If you want to share the tag with others or make it available in your remote repository (e.g., GitHub, GitLab), you need to push the tag:
-
-bash
-Copy code
-git push origin v1.0.0
-Replace origin with the name of your remote if it's different.
-
-Verify the tag: You can use git show to view information about the tag, including the commit it points to:
-
-bash
-Copy code
-git show v1.0.0
-That's it! You've successfully created a tag in Git. Tags provide a convenient way to reference specific points in your repository's history and are useful for versioning and release management
+    public static void main(String[] args) {
+        String input = "abbcdddeef";
+        String compressedString = compressString(input);
+        System.out.println("Compressed string: " + compressedString);
+    }
+}
