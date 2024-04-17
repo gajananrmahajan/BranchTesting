@@ -1,36 +1,86 @@
-import java.util.ArrayList;
-import java.util.List;
+Between GitHub actions workflow runs, I want to use .m2 as cache. Can you please suggest what needs to be done in yaml file to achieve this
 
-public class SubstringCombinations {
-    public static List<List<Integer>> findSubstringCombinations(String string1, String string2) {
-        List<List<Integer>> combinations = new ArrayList<>();
-        int len1 = string1.length();
-        int len2 = string2.length();
+ChatGPT
+Certainly! To cache the .m2 directory between GitHub Actions workflow runs, you can use the actions/cache action. Here's an example of how you can set up your YAML file to achieve this:
 
-        for (int i = 0; i <= len2 - len1; i++) {
-            if (string2.substring(i, i + len1).equals(string1)) {
-                List<Integer> combination = new ArrayList<>();
-                for (int j = i + 1; j <= i + len1; j++) {
-                    combination.add(j);
-                }
-                combinations.add(combination);
-            }
-        }
+yaml
+Copy code
+name: Java CI
 
-        return combinations;
-    }
+on:
+  push:
+    branches:
+      - main
 
-    public static void main(String[] args) {
-        String string1 = "abc";
-        String string2 = "abcbabc";
+jobs:
+  build:
 
-        List<List<Integer>> combinations = findSubstringCombinations(string1, string2);
+    runs-on: ubuntu-latest
 
-        System.out.println("String1 is in string2 with below mentioned combinations locations:");
-        for (List<Integer> combination : combinations) {
-            System.out.println(combination);
-        }
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-        System.out.println("Hence it has " + combinations.size() + " matching counts.");
-    }
-}
+    - name: Cache Maven dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+
+    - name: Build with Maven
+      run: mvn -B clean package
+
+    - name: Run tests
+      run: mvn test
+In this YAML file:
+
+The on section specifies the event that triggers the workflow. In this case, it's triggered on pushes to the main branch.
+The jobs section defines the different jobs that should be executed.
+In the build job, we define steps to be executed:
+Checkout code: This step checks out your repository's code.
+Cache Maven dependencies: This step uses the actions/cache action to cache the .m2/repository directory, where Maven stores its dependencies. The cache key is generated based on the operating system and the hash of your pom.xml file.
+Set up JDK 11: This step sets up JDK 11 for building your Java project.
+Build with Maven: This step runs mvn clean package to build your project.
+Run tests: This step runs mvn test to execute your project's tests.
+With this setup, the Maven dependencies will be cached between workflow runs, which can significantly speed up your builds by avoiding the need to download dependencies every time.
+
+User
+Path to access  Docker images on GitHub Container registry
+ChatGPT
+To access Docker images on GitHub Container Registry, you need to specify the path to the image in your GitHub Actions workflow or in your Docker configuration. The path to access Docker images on GitHub Container Registry generally follows this format:
+
+php
+Copy code
+ghcr.io/<username>/<repository>/<image-name>:<tag>
+Here's what each part of the path represents:
+
+ghcr.io: This is the domain for GitHub Container Registry.
+<username>: This is your GitHub username or the username of the organization that owns the repository where the Docker image is stored.
+<repository>: This is the name of the repository where the Docker image is stored.
+<image-name>: This is the name of the Docker image.
+<tag>: This is the tag associated with the Docker image. It specifies the version or variant of the image you want to pull. If omitted, it defaults to latest.
+For example, if you have a Docker image named my-image in a repository named my-repo under your GitHub account my-username, the path to access this image would be:
+
+perl
+Copy code
+ghcr.io/my-username/my-repo/my-image:latest
+You can use this path in your Docker configuration files (e.g., Dockerfile, docker-compose.yml) or in your GitHub Actions workflows where you need to pull Docker images.
+
+Here's an example of how you might use this path in a GitHub Actions workflow to pull a Docker image:
+
+yaml
+Copy code
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pull Docker image
+      uses: docker://ghcr.io/my-username/my-repo/my-image:latest
+Replace my-username, my-repo, and my-image with your actual GitHub username, repository name, and Docker image name, respectively.
