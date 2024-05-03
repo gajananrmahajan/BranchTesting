@@ -1,64 +1,39 @@
-import com.codoid.products.fillo.Connection;
-import com.codoid.products.fillo.Fillo;
-import com.codoid.products.fillo.Recordset;
+To pass the test method's parameter value from the data provider to the @BeforeMethod annotated method in TestNG, you can use TestNG's ITestContext object. Here's how you can achieve it:
 
-public class ExcelSheetNames {
+java
+Copy code
+import org.testng.ITestContext;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-    public static void main(String[] args) {
-        Fillo fillo = new Fillo();
-        Connection connection = null;
-        Recordset recordset = null;
+public class TestNGExample {
 
-        try {
-            connection = fillo.getConnection("YourExcelFile.xlsx"); // Replace with your Excel file path
-            recordset = connection.getMetaData().getTables(null, null, null, null);
+    @DataProvider(name = "TestData")
+    public Object[][] testData() {
+        return new Object[][] {
+                {"Java"},
+                {"Python"},
+                {"Perl"}
+        };
+    }
 
-            while (recordset.next()) {
-                System.out.println(recordset.getField("TABLE_NAME"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (recordset != null) {
-                recordset.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        }
+    @BeforeMethod
+    public void beforeTestMethod(ITestContext context) {
+        String language = (String) context.getAttribute("language");
+        System.out.println("Language in BeforeMethod: " + language);
+    }
+
+    @Test(dataProvider = "TestData")
+    public void test(String language, ITestContext context) {
+        // Set the language as an attribute in TestNG context
+        context.setAttribute("language", language);
+
+        System.out.println("Test method with language: " + language);
     }
 }
-***********************
+In this example:
 
-import com.codoid.products.exception.FilloException;
-import com.codoid.products.fillo.Connection;
-import com.codoid.products.fillo.Fillo;
-import com.codoid.products.fillo.Recordset;
-
-public class ExcelSheetNames {
-
-    public static void main(String[] args) {
-        Fillo fillo = new Fillo();
-        Connection connection = null;
-        Recordset recordset = null;
-
-        try {
-            connection = fillo.getConnection("YourExcelFile.xlsx"); // Replace with your Excel file path
-            String query = "SHOW SHEETS";
-            recordset = connection.executeQuery(query);
-
-            while (recordset.next()) {
-                System.out.println(recordset.getField("SheetName"));
-            }
-        } catch (FilloException e) {
-            e.printStackTrace();
-        } finally {
-            if (recordset != null) {
-                recordset.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        }
-    }
-}
+In the @BeforeMethod annotated method, we retrieve the language value from the ITestContext object using context.getAttribute("language").
+In the @Test annotated method, we pass the ITestContext object as a parameter. This allows us to set the language as an attribute in the TestNG context using context.setAttribute("language", language).
+This way, the language value is passed from the test method to the @BeforeMethod annotated method via the TestNG context.
