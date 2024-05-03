@@ -1,3 +1,35 @@
+import com.codoid.products.fillo.Connection;
+import com.codoid.products.fillo.Fillo;
+import com.codoid.products.fillo.Recordset;
+
+public class ExcelSheetNames {
+
+    public static void main(String[] args) {
+        Fillo fillo = new Fillo();
+        Connection connection = null;
+        Recordset recordset = null;
+
+        try {
+            connection = fillo.getConnection("YourExcelFile.xlsx"); // Replace with your Excel file path
+            recordset = connection.getMetaData().getTables(null, null, null, null);
+
+            while (recordset.next()) {
+                System.out.println(recordset.getField("TABLE_NAME"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (recordset != null) {
+                recordset.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+}
+***********************
+
 import com.codoid.products.exception.FilloException;
 import com.codoid.products.fillo.Connection;
 import com.codoid.products.fillo.Fillo;
