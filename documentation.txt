@@ -1,17 +1,32 @@
-Explanation of each folder:
+import com.codoid.products.exception.FilloException;
+import com.codoid.products.fillo.Connection;
+import com.codoid.products.fillo.Fillo;
+import com.codoid.products.fillo.Recordset;
 
-src: This directory contains the source code of your project.
-main: This directory contains the main source code of your project.
-java: Java source code files reside here.
-your.package.name: This package represents your project's package structure.
-stepdefinitions: This package or folder contains the step definition files where you define the implementation of your Cucumber steps.
-utils: This package may contain utility classes that you may need in your step definitions or elsewhere in your project.
-resources: Resources used in the project.
-features: This directory contains your Cucumber feature files, where you write your scenarios in Gherkin syntax.
-config: This directory can contain configuration files needed for your project, such as property files or XML configurations.
-test: This directory contains the test source code of your project.
-java: Java test source code files reside here.
-your.package.name: Test source code files are organized similarly to the main source code.
-runners: This package or folder contains the test runners, which are Java classes responsible for executing Cucumber tests.
-pom.xml: This is the Maven project configuration file. It defines project dependencies, build settings, and other project-specific configurations.
-This structure helps maintain a clean separation between your source code, test code, and resources, making it easier to manage and maintain your Cucumber project.
+public class ExcelSheetNames {
+
+    public static void main(String[] args) {
+        Fillo fillo = new Fillo();
+        Connection connection = null;
+        Recordset recordset = null;
+
+        try {
+            connection = fillo.getConnection("YourExcelFile.xlsx"); // Replace with your Excel file path
+            String query = "SHOW SHEETS";
+            recordset = connection.executeQuery(query);
+
+            while (recordset.next()) {
+                System.out.println(recordset.getField("SheetName"));
+            }
+        } catch (FilloException e) {
+            e.printStackTrace();
+        } finally {
+            if (recordset != null) {
+                recordset.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+}
