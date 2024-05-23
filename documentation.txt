@@ -1,76 +1,37 @@
-Design by Contract (DbC) is a programming methodology introduced by Bertrand Meyer in the Eiffel programming language. It involves defining formal, precise, and verifiable interface specifications for software components, ensuring that software behaves correctly under specified conditions. The core idea is to define "contracts" for software components, including preconditions, postconditions, and invariants.
+import java.util.*;
 
-Key Concepts of Design by Contract
-Preconditions: Conditions that must be true before a method or function is executed. They define what is expected from the caller of the method.
-Postconditions: Conditions that must be true after a method or function has executed. They define what the method guarantees upon completion.
-Invariants: Conditions that must always be true for an object or system, representing the consistent state of the object.
-Example in Pseudocode
-Let's illustrate DbC with a simple example of a bank account class.
-
-Step 1: Define the Class with Contracts
-java
-Copy code
-public class BankAccount {
-    private double balance;
-
-    public BankAccount(double initialBalance) {
-        // Precondition: initial balance must be non-negative
-        assert initialBalance >= 0 : "Initial balance cannot be negative";
-        this.balance = initialBalance;
-    }
-
-    public void deposit(double amount) {
-        // Precondition: deposit amount must be positive
-        assert amount > 0 : "Deposit amount must be positive";
-
-        double oldBalance = this.balance;
-
-        this.balance += amount;
-
-        // Postcondition: balance should increase by deposit amount
-        assert this.balance == oldBalance + amount : "Balance did not increase correctly";
-    }
-
-    public void withdraw(double amount) {
-        // Precondition: withdrawal amount must be positive and less than or equal to balance
-        assert amount > 0 : "Withdrawal amount must be positive";
-        assert amount <= this.balance : "Insufficient funds for withdrawal";
-
-        double oldBalance = this.balance;
-
-        this.balance -= amount;
-
-        // Postcondition: balance should decrease by withdrawal amount
-        assert this.balance == oldBalance - amount : "Balance did not decrease correctly";
-    }
-
-    public double getBalance() {
-        // Invariant: balance must always be non-negative
-        assert this.balance >= 0 : "Balance is negative";
-        return this.balance;
-    }
-}
-Step 2: Use the Class with Contracts
-java
-Copy code
-public class Main {
+public class SortMapByValues {
     public static void main(String[] args) {
-        BankAccount account = new BankAccount(100.0);
+        // Create a HashMap and add some entries
+        Map<String, Integer> unsortedMap = new HashMap<>();
+        unsortedMap.put("apple", 50);
+        unsortedMap.put("banana", 30);
+        unsortedMap.put("cherry", 20);
+        unsortedMap.put("date", 40);
 
-        account.deposit(50.0);
-        assert account.getBalance() == 150.0 : "Balance should be 150.0";
+        // Print the unsorted map
+        System.out.println("Unsorted Map: " + unsortedMap);
 
-        account.withdraw(30.0);
-        assert account.getBalance() == 120.0 : "Balance should be 120.0";
+        // Sort the map by values
+        Map<String, Integer> sortedMap = sortByValue(unsortedMap);
 
-        // The following line will cause an assertion error
-        // account.withdraw(200.0);
+        // Print the sorted map
+        System.out.println("Sorted Map: " + sortedMap);
+    }
+
+    private static Map<String, Integer> sortByValue(Map<String, Integer> unsortedMap) {
+        // Convert Map to List of Map entries
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(unsortedMap.entrySet());
+
+        // Sort the list by values using a comparator
+        list.sort(Map.Entry.comparingByValue());
+
+        // Create a new LinkedHashMap to maintain the sorted order
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
     }
 }
-Benefits of Design by Contract
-Improved Reliability: Explicit contracts help ensure that software components interact correctly, reducing bugs.
-Enhanced Documentation: Contracts serve as formal documentation for methods, making it clear what each method expects and guarantees.
-Ease of Debugging: Contracts can catch errors early in development by validating assumptions.
-Modularity: Well-defined contracts allow components to be developed and tested in isolation.
-Conclusion
-Design by Contract is a powerful approach to building reliable, maintainable, and well-documented software. By specifying preconditions, postconditions, and invariants, developers can create clear contracts for their components, ensuring correct behavior and facilitating debugging and maintenance.
