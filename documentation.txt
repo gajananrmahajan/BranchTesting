@@ -1,37 +1,186 @@
-import java.util.*;
+  You have a jug of 5 liters and a jug of 3 liters. You want to get 4 liters of water. How do you get the exact amount of water, considering there are no measurement marks on the jug and no extra storage containers allowed?
+·  Can you provide an example of a bug with high priority and low severity?
+·  What are end-to-end testing and integration testing? How do they differ?
+·  What are locators in Selenium, and how are they used in automation testing?
+· Describe the pm object in Postman and its uses.
+· Explain what a collection is in the context of APIs and tools like Postman.
+· How would you write a query to find records where the name is null?
+· Write a query to count the number of employees who work in the HR department.
+· How do you write an SQL query to get the current date?
+· Write Java Program to Merge Two Strings Alternately.
+· Write a Java program to reverse a given string.
+· How would you use Selenium WebDriver to handle a dropdown menu?
+· What are the different scenarios you would test to ensure the Add to Cart
+functionality works flawlessly?
 
-public class SortMapByValues {
-    public static void main(String[] args) {
-        // Create a HashMap and add some entries
-        Map<String, Integer> unsortedMap = new HashMap<>();
-        unsortedMap.put("apple", 50);
-        unsortedMap.put("banana", 30);
-        unsortedMap.put("cherry", 20);
-        unsortedMap.put("date", 40);
+***************************
 
-        // Print the unsorted map
-        System.out.println("Unsorted Map: " + unsortedMap);
+7 HTTP methods with Story Telling for API Testers!
 
-        // Sort the map by values
-        Map<String, Integer> sortedMap = sortByValue(unsortedMap);
+1. GET
+Imagine you walk into a library and ask the librarian to fetch a specific book for you. The GET method is similar; it's used to request data from a server.
 
-        // Print the sorted map
-        System.out.println("Sorted Map: " + sortedMap);
-    }
+~ When you send a GET request to an API endpoint, you're asking the server to retrieve the requested information, like fetching a book from the shelves.
 
-    private static Map<String, Integer> sortByValue(Map<String, Integer> unsortedMap) {
-        // Convert Map to List of Map entries
-        List<Map.Entry<String, Integer>> list = new LinkedList<>(unsortedMap.entrySet());
+2. POST
+Picture yourself sending a letter to a company with a new order request. The POST method is used to send data to a server to create a new resource.
 
-        // Sort the list by values using a comparator
-        list.sort(Map.Entry.comparingByValue());
+~ When you send a POST request, you're submitting information (like order details) to the server, which then processes and stores it, creating a new resource in the system.
 
-        // Create a new LinkedHashMap to maintain the sorted order
-        Map<String, Integer> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Integer> entry : list) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
+3. PUT
+Think of a gardener replacing an old plant with a new one in the same spot. The PUT method is used to update an existing resource or create a new one if it doesn't exist.
 
-        return sortedMap;
-    }
-}
+~ When you send a PUT request, you're providing the complete information for the resource, either updating it if it's already there or creating it if it's not.
+
+4. DELETE
+Imagine you have a document you no longer need, and you shred it to dispose of it. The DELETE method is used to remove a resource from the server.
+
+~ When you send a DELETE request, you're instructing the server to delete the specified resource, just like getting rid of an unwanted document.
+
+5. PATCH
+Consider making minor edits to a draft document without rewriting the entire thing. The PATCH method is used for partial updates to a resource.
+
+~ When you send a PATCH request, you're providing only the changes you want to make, updating specific fields rather than replacing the whole resource.
+
+6. HEAD
+Think of checking the table of contents of a book without reading the whole book. The HEAD method is similar to GET, but it only requests the headers and status line, not the body of the resource.
+
+~ When you send a HEAD request, you're asking for metadata about the resource, useful for checking if it exists or if it's been modified.
+
+7. OPTIONS
+Imagine you are at a restaurant and you ask the waiter what dishes are available. The OPTIONS method is used to describe the communication options for the target resource.
+
+~ When you send an OPTIONS request, the server responds with the HTTP methods that are supported for that resource, helping you understand what actions you can perform.
+
+What's your frequently used HTTP method in API Testing ?
+
+*****************************
+
+While interacting with young testers, I noticed that their focus tends to be more boxed and only on the application scope during testing. For them, quality often seems synonymous with specific feature testing activities and identifying defects.
+
+Here are some areas where I found their understanding to be less clear:
+- The value that testers can add during the requirements-gathering stage
+- Effective collaboration with developers during feature development
+- Comprehensive understanding of the overall application architecture
+- The importance of visualizing end-to-end user journeys and their resemblance to real-world application usage
+- Adopting a system thinking mindset, which involves understanding the roles of various components (such as UI, web services, data storage, and hardware) in completing a user journey
+- Understanding each test scenario thoroughly and knowing how to execute the same scenario with multiple datasets
+- Utilising exploratory testing techniques to uncover hidden defects
+
+It is not an exhaustive list, and it can never be. But the objective is to understand our role beyond just basic feature testers and defect police.
+
+**********************************
+
+I've been thinking a bit about the concept of "expert beginners" lately.
+
+Probably because I feel like I'm seeing more and more of them (at least by my perception) here on LinkedIn, especially in the area of software career advice and "self help".
+
+There's nothing wrong with sharing what you're learning, or what you think has helped you, no matter how experienced or inexperienced you are.
+
+The problem is when you still don't know what you don't know. (I say "still" in the sense of people still fairly early in their careers, but unfortunately I do think it's possible to never outgrow this stage.) When your experience is narrow and limited, it's possible to think you know exactly what worked for you, why it worked, and how it will surely help everyone else too.
+
+That just isn't life. In reality, there's almost always a bigger picture and information that you don't have access to.
+
+Maybe dropping out of high school and self-learning got you a $100k (in some unspecified market) job, but it won't work for everyone.
+
+Maybe your resume got you a job at Google, but maybe your experience at another MAANG company helped you more than the resume format you're crediting.
+
+Maybe you really like how they did everything at your ex-MAANG job, but those concepts aren't as uncommon as you think, or the culture wasn't as healthy as you thought (it was all you knew?).
+
+Maybe you climbed several rungs of the career ladder really fast, but maybe there are behind-the-scenes factors you didn't see or know about, or you happened to be a favorite with management.
+
+What's my point?
+
+If such posts were phrased as "this is what I did", or "this is something I found helpful", or "here's something I learned", I think they'd be interesting and useful as data points (if true, of course--some stories are so repeated and wrapped up in sales pitches that I find their credibility doubtful).
+
+But the overgeneralizations towards "and therefore it will work for you too" just aren't realistic or reasonable promises to make. They're setting a lot of people up to be disappointed when they follow all the same steps (or worse, pay money to learn those steps), and it _doesn't_ work for them.
+
+Every company is different. Every team is different. Every person is different.
+
+Heuristics, tips, and ideas are helpful, but there's no such thing as a magic formula for formatting your resume, getting an education, doing an interview, or landing a job.
+
+Be skeptical of such "one size fits all" or "simple" claims. Ask yourself "what _else_ could explain this?"
+
+And "follow" people who aren't afraid to post about complexity, nuance, difficulty, and failures.
+
+******************************
+
+Complete Breakdown of Page Object Model
+
+What is POM? 
+is a design pattern used in test automation to create an abstraction layer between test scripts and the web page classes.
+
+Key Concepts: 
+1) Page Object: A class representing a web page or a component of a web page
+2) Separation of Concerns: POM separates the test logic from the web page structure
+3) Reusable Components: Page Objects can be reused across multiple test cases, promoting code reusability
+4) Maintenance: . If the UI changes, only the corresponding Page Object needs to be updated
+
+OOP Concepts used in POM:
+1) Encapsulation: Page Objects encapsulate the state (web elements) and behavior (interactions) of web pages
+
+2) Inheritance: Page Objects can inherit common functionalities from a base class, promoting code reuse
+
+3) Abstraction: Page Objects abstract away the details of the web page, exposing only relevant methods for test scripts, such as keywords.
+
+4) Polymorphism: Page Objects can implement common interfaces, enabling polymorphic behavior, even overload functions with different parameters such as performing click with click(), javascript etc.
+
+Structure for POM:
+src
+├── main
+│ └── java
+│ └── com
+│ └── yourcompany
+│ ├── pages
+│ │ └── LoginPage.java
+│ └── utils
+│ ├── WebDriverFactory.java
+│ └── FileUtils.java
+└── test
+ ├── java
+ │ └── com
+ │ └── yourcompany
+ │ ├── reports
+ │ │ └── ExtentReportListener.java
+ │ ├── logs
+ │ │ └── Log4jConfig.xml
+ │ ├── screenshots
+ │ │ └── TestFailureListener.java
+ │ ├── tests
+ │ │ └── LoginTest.java
+ │ ├── assertions
+ │ └── keywords
+ │ └── CommonKeywords.java
+ └── resources
+ └── testng.xml
+
+Components breakdown: 
+1) /pages:
+This directory contains Page Objects, where each page or component of a web page has its own class
+
+2) /tests:
+This directory contains test classes, where each class represents a test scenario
+
+3) /utils:
+This directory contains utility classes that provide reusable functionalities 
+For example, WebDriverFactory provides methods to initialize WebDriver
+
+4) /reports:
+This directory contains classes related to test reporting
+
+5) /logs:
+This directory contains configuration files and logs related to logging
+
+6) /screenshots:
+This directory contains classes related to capturing screenshots during test execution
+
+7) /keywords:
+This directory contains keyword-driven testing-related classes
+
+8) /testng.xml:
+This XML file is the TestNG configuration file where you define test suites and other configurations
+
+-x-x-
+Prepare for Test Automation Interviews using my E-Books course (paid): https://lnkd.in/g5hr9bea
+
+SDETs, clear your next interview using 950+ Q&A bank (paid): https://lnkd.in/gSU-m2F7
