@@ -1,3 +1,736 @@
+What is exactly meant by managed services? Please explain in simple words
+ChatGPT
+Managed services refer to a business model where a company outsources certain tasks or functions to a third-party provider, known as a managed service provider (MSP). The MSP takes over the responsibility of managing and maintaining these tasks or functions on an ongoing basis. Here’s a simple breakdown:
+
+Outsourcing: The company hires an external expert to handle specific tasks.
+Ongoing Management: The MSP continuously manages, monitors, and supports the outsourced tasks.
+Specialized Services: These tasks can include IT support, network management, cybersecurity, data backup, and more.
+Example
+Imagine you own a small business, and you don't have the time or expertise to handle your computer systems and network security. Instead of hiring full-time IT staff, you contract a managed service provider. This provider then:
+
+Monitors your systems: Ensures everything is running smoothly and fixes issues as they arise.
+Maintains your network: Keeps your network secure and up-to-date.
+Supports your users: Provides help desk support for your employees.
+In essence, managed services help businesses focus on their core activities by letting experts handle specific, often complex, tasks efficiently and reliably.
+
+What is cucumber.filter.tag
+ChatGPT
+cucumber.filter.tag is a configuration option used in Cucumber, a popular tool for Behavior-Driven Development (BDD). It allows you to specify which tagged scenarios or features should be included or excluded when running your Cucumber tests. Tags in Cucumber are used to categorize scenarios and features, making it easier to manage and execute specific subsets of tests.
+
+How cucumber.filter.tag Works
+Tagging Scenarios or Features: In your Cucumber feature files, you can add tags to scenarios or feature blocks. Tags are prefixed with @.
+
+gherkin
+Copy code
+@important
+Feature: User login
+
+  @smoke
+  Scenario: Successful login
+    Given the user is on the login page
+    When the user enters valid credentials
+    Then the user is redirected to the homepage
+
+  @regression
+  Scenario: Unsuccessful login with invalid credentials
+    Given the user is on the login page
+    When the user enters invalid credentials
+    Then the user sees an error message
+Using cucumber.filter.tag: When running Cucumber tests, you can use the cucumber.filter.tag option to specify which tags should be included or excluded. This helps in selectively running certain tests based on their tags.
+
+Include tags: To run only scenarios with specific tags, use the tag name directly.
+
+sh
+Copy code
+cucumber --cucumber.filter.tag @smoke
+This command will run only the scenarios tagged with @smoke.
+
+Exclude tags: To exclude scenarios with specific tags, use the ~ symbol before the tag name.
+
+sh
+Copy code
+cucumber --cucumber.filter.tag ~@regression
+This command will run all scenarios except those tagged with @regression.
+
+Combining Tags: You can also combine multiple tags using logical AND and OR operators.
+
+AND operator: Run scenarios that have all specified tags.
+
+sh
+Copy code
+cucumber --cucumber.filter.tag "@smoke and @important"
+This command will run only the scenarios tagged with both @smoke and @important.
+
+OR operator: Run scenarios that have at least one of the specified tags.
+
+sh
+Copy code
+cucumber --cucumber.filter.tag "@smoke or @regression"
+This command will run scenarios tagged with either @smoke or @regression.
+
+Benefits of Using cucumber.filter.tag
+Focused Testing: Allows you to focus on specific parts of your application by running only relevant tests.
+Efficient Test Runs: Saves time by excluding tests that are not needed for a particular test run.
+Organized Test Management: Helps in organizing and maintaining a large suite of tests by categorizing them with meaningful tags.
+In summary, cucumber.filter.tag is a powerful feature in Cucumber that helps you manage and execute your tests efficiently by filtering them based on tags.
+
+How to provide multiple cucumber.glue value in TestNG xml file's parameter tag
+ChatGPT
+To provide multiple cucumber.glue values in a TestNG XML file, you can use a comma-separated list of package names within the <parameter> tag. This approach allows you to specify multiple glue locations where Cucumber will look for step definitions, hooks, and other necessary components.
+
+Here's an example of how to configure this in a TestNG XML file:
+
+Example TestNG XML Configuration
+xml
+Copy code
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Cucumber Test Suite">
+    <test name="Cucumber Tests">
+        <parameter name="cucumber.glue" value="com.example.steps,com.example.hooks,com.example.othersteps" />
+        <classes>
+            <class name="io.cucumber.testng.AbstractTestNGCucumberTests" />
+        </classes>
+    </test>
+</suite>
+Breakdown of the Configuration
+Suite Declaration: Defines the test suite with a name.
+Test Declaration: Defines a test with a name.
+Parameter Tag: Specifies the cucumber.glue parameter with multiple package names, separated by commas.
+Classes Tag: Specifies the class that will run the Cucumber tests using TestNG. Typically, this class extends io.cucumber.testng.AbstractTestNGCucumberTests.
+Steps to Implement
+Create Feature Files: Place your Cucumber feature files in the appropriate directory.
+Create Step Definitions and Hooks: Implement your step definitions and hooks in the specified packages, e.g., com.example.steps, com.example.hooks, and com.example.othersteps.
+Create the TestNG XML File: Create or update your TestNG XML file with the necessary configuration as shown above.
+Run Tests: Use TestNG to run the test suite, which will include all the glue code from the specified packages.
+Example Step Definitions and Hooks Structure
+com.example.steps: Contains step definitions related to various features.
+
+java
+Copy code
+package com.example.steps;
+import io.cucumber.java.en.Given;
+
+public class StepDefinitions {
+    @Given("a precondition")
+    public void aPrecondition() {
+        // Step implementation
+    }
+}
+com.example.hooks: Contains hooks like @Before and @After.
+
+java
+Copy code
+package com.example.hooks;
+import io.cucumber.java.Before;
+
+public class Hooks {
+    @Before
+    public void beforeScenario() {
+        // Hook implementation
+    }
+}
+com.example.othersteps: Contains additional step definitions.
+
+java
+Copy code
+package com.example.othersteps;
+import io.cucumber.java.en.Then;
+
+public class OtherStepDefinitions {
+    @Then("a postcondition")
+    public void aPostcondition() {
+        // Step implementation
+    }
+}
+By configuring the cucumber.glue parameter with multiple package names, Cucumber will search all specified packages for step definitions, hooks, and other necessary components, ensuring that your test execution is comprehensive and well-organized.
+
+While executing below maven command - 
+
+mvn clean test -DsuiteXmilFile=./test_suites/abc.xml
+
+Getting error - unknown lifecycle phase "./test_suites/abc.xml"
+
+2/2
+
+ChatGPT
+The error "unknown lifecycle phase" typically occurs because Maven is interpreting the file path as an additional command-line argument rather than a property value. This usually happens due to incorrect syntax in passing the property to the mvn command.
+
+To correctly pass a custom property like suiteXmlFile to Maven, you need to use the -D option properly. Here's the corrected command:
+
+sh
+Copy code
+mvn clean test -DsuiteXmlFile=./test_suites/abc.xml
+Ensure the property name (suiteXmlFile) matches exactly what your Maven Surefire or Failsafe plugin expects.
+
+Configuring Maven Surefire Plugin
+Make sure your pom.xml is configured to use the suiteXmlFile property correctly. Here’s how you can set up the Maven Surefire Plugin to use this property:
+
+Open pom.xml: Add or update the configuration for the Surefire plugin to include the suiteXmlFiles option, which references the suiteXmlFile property.
+xml
+Copy code
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <configuration>
+                <suiteXmlFiles>
+                    <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                </suiteXmlFiles>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+Steps to Execute the Command
+Check the TestNG XML File Path: Ensure the path ./test_suites/abc.xml is correct and the file exists at that location.
+
+Run the Maven Command: Execute the following command in your terminal:
+
+sh
+Copy code
+mvn clean test -DsuiteXmlFile=./test_suites/abc.xml
+Example testng.xml Configuration
+Ensure your testng.xml (e.g., abc.xml) is correctly set up:
+
+xml
+Copy code
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Cucumber Test Suite">
+    <test name="Cucumber Tests">
+        <parameter name="cucumber.glue" value="com.example.steps,com.example.hooks,com.example.othersteps" />
+        <classes>
+            <class name="io.cucumber.testng.AbstractTestNGCucumberTests" />
+        </classes>
+    </test>
+</suite>
+Troubleshooting
+If you continue to face issues:
+
+Double-Check Property Name: Ensure suiteXmlFile is correctly spelled and matches what’s used in your pom.xml.
+Verify Path: Make sure the path to your TestNG XML file is correct relative to the directory where you’re running the Maven command.
+Validate Plugin Configuration: Ensure the maven-surefire-plugin version you are using supports the suiteXmlFiles configuration as shown above.
+By correctly setting up the property and ensuring the correct Maven command syntax, you should be able to run your tests without encountering the "unknown lifecycle phase" error.
+
+Meaning of spawn in marathi
+ChatGPT
+The word "spawn" in Marathi can be translated to "अंडी घालणे" (aṇḍī ghālaṇe) when referring to fish or other animals laying eggs. It can also be translated to "निर्मिती करणे" (nirmitī karaṇe) when used in the context of creating or generating something, like in video games or software where new entities or processes are created.
+
+Write a Java program to validate variable neither null nor empty
+ChatGPT
+To write a Java program that validates whether a variable (specifically a String variable) is neither null nor empty, you can create a utility method to perform the validation. Here’s a simple example:
+
+java
+Copy code
+public class StringValidator {
+
+    /**
+     * Checks if a string is neither null nor empty.
+     * 
+     * @param str the string to check
+     * @return true if the string is neither null nor empty, false otherwise
+     */
+    public static boolean isValid(String str) {
+        return str != null && !str.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        String str1 = "Hello, World!";
+        String str2 = "";
+        String str3 = null;
+
+        System.out.println("str1 is valid: " + isValid(str1)); // Output: str1 is valid: true
+        System.out.println("str2 is valid: " + isValid(str2)); // Output: str2 is valid: false
+        System.out.println("str3 is valid: " + isValid(str3)); // Output: str3 is valid: false
+    }
+}
+Explanation
+isValid Method: This method checks if the given String is neither null nor empty.
+
+str != null: Ensures the string is not null.
+!str.isEmpty(): Ensures the string is not empty (i.e., it has a length greater than 0).
+main Method: This is the entry point of the program.
+
+It defines several test cases (str1, str2, str3) to demonstrate the validation.
+It calls the isValid method on each test case and prints the result.
+Running the Program
+To run this program:
+
+Save the code: Save the code to a file named StringValidator.java.
+Compile the code: Open a terminal or command prompt and navigate to the directory containing the StringValidator.java file. Run the following command to compile the code:
+sh
+Copy code
+javac StringValidator.java
+Run the compiled program: Execute the compiled program with the following command:
+sh
+Copy code
+java StringValidator
+This will output:
+
+csharp
+Copy code
+str1 is valid: true
+str2 is valid: false
+str3 is valid: false
+The program demonstrates the validation logic effectively for different scenarios: a non-empty string, an empty string, and a null string.
+
+How can we use Objects class to validate above?
+ChatGPT
+You can use the Objects class from the java.util package to simplify the null check part of the validation. The Objects class provides utility methods for operating on objects, including a null-check method.
+
+Here's how you can use the Objects.requireNonNullElse method along with String.isEmpty to validate that a string is neither null nor empty:
+
+java
+Copy code
+import java.util.Objects;
+
+public class StringValidator {
+
+    /**
+     * Checks if a string is neither null nor empty.
+     * 
+     * @param str the string to check
+     * @return true if the string is neither null nor empty, false otherwise
+     */
+    public static boolean isValid(String str) {
+        // Use Objects.requireNonNullElse to replace null with an empty string, then check if the string is not empty
+        return !Objects.requireNonNullElse(str, "").isEmpty();
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        String str1 = "Hello, World!";
+        String str2 = "";
+        String str3 = null;
+
+        System.out.println("str1 is valid: " + isValid(str1)); // Output: str1 is valid: true
+        System.out.println("str2 is valid: " + isValid(str2)); // Output: str2 is valid: false
+        System.out.println("str3 is valid: " + isValid(str3)); // Output: str3 is valid: false
+    }
+}
+Explanation
+Objects.requireNonNullElse Method: This method takes two parameters: the object to check and a default object to return if the first object is null.
+
+Objects.requireNonNullElse(str, ""): If str is null, this returns an empty string "". Otherwise, it returns str.
+Validation Logic:
+
+After using Objects.requireNonNullElse, the result will never be null. We only need to check if it is not empty using !str.isEmpty().
+main Method: This is the entry point of the program, where test cases are defined and validated using the isValid method.
+
+Running the Program
+To run this program:
+
+Save the code: Save the code to a file named StringValidator.java.
+Compile the code: Open a terminal or command prompt and navigate to the directory containing the StringValidator.java file. Run the following command to compile the code:
+sh
+Copy code
+javac StringValidator.java
+Run the compiled program: Execute the compiled program with the following command:
+sh
+Copy code
+java StringValidator
+This will output:
+
+csharp
+Copy code
+str1 is valid: true
+str2 is valid: false
+str3 is valid: false
+This program uses the Objects class to handle the null check, simplifying the validation process while ensuring that the string is neither null nor empty.
+
+I dont see requireNonNullElse method
+ChatGPT
+You're right, the Objects.requireNonNullElse method does not exist in the standard library. My apologies for the confusion. Instead, you can use the Objects.isNull and Objects.nonNull methods to perform null checks.
+
+Here's how you can rewrite the validation method using Objects.isNull:
+
+java
+Copy code
+import java.util.Objects;
+
+public class StringValidator {
+
+    /**
+     * Checks if a string is neither null nor empty.
+     * 
+     * @param str the string to check
+     * @return true if the string is neither null nor empty, false otherwise
+     */
+    public static boolean isValid(String str) {
+        // Use Objects.isNull to check if the string is null and then check if it is empty
+        return Objects.nonNull(str) && !str.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        String str1 = "Hello, World!";
+        String str2 = "";
+        String str3 = null;
+
+        System.out.println("str1 is valid: " + isValid(str1)); // Output: str1 is valid: true
+        System.out.println("str2 is valid: " + isValid(str2)); // Output: str2 is valid: false
+        System.out.println("str3 is valid: " + isValid(str3)); // Output: str3 is valid: false
+    }
+}
+Explanation
+Objects.nonNull Method: This method returns true if the provided reference is non-null, and false otherwise.
+
+Objects.nonNull(str): Ensures the string is not null.
+Validation Logic:
+
+First, check if the string is not null using Objects.nonNull(str).
+Then, check if the string is not empty using !str.isEmpty().
+main Method: This is the entry point of the program, where test cases are defined and validated using the isValid method.
+
+Running the Program
+To run this program:
+
+Save the code: Save the code to a file named StringValidator.java.
+Compile the code: Open a terminal or command prompt and navigate to the directory containing the StringValidator.java file. Run the following command to compile the code:
+sh
+Copy code
+javac StringValidator.java
+Run the compiled program: Execute the compiled program with the following command:
+sh
+Copy code
+java StringValidator
+This will output:
+
+csharp
+Copy code
+str1 is valid: true
+str2 is valid: false
+str3 is valid: false
+This program correctly uses the Objects class methods to handle the null check, ensuring that the string is neither null nor empty.
+
+I've Cucumber tests with TestNG+Maven and I want to run those tests with maven command line. Please guide on it.
+ChatGPT
+To run Cucumber tests with TestNG and Maven from the command line, you need to set up your project correctly and use the appropriate Maven commands. Here’s a step-by-step guide:
+
+Step 1: Project Structure
+Ensure your project structure looks something like this:
+
+lua
+Copy code
+my-cucumber-project/
+|-- src/
+|   |-- main/
+|   |-- test/
+|       |-- java/
+|       |   |-- com/
+|       |       |-- example/
+|       |           |-- steps/
+|       |           |   |-- StepDefinitions.java
+|       |           |-- runners/
+|       |               |-- TestRunner.java
+|       |-- resources/
+|           |-- features/
+|               |-- myFeature.feature
+|-- pom.xml
+Step 2: pom.xml Configuration
+Your pom.xml should include the necessary dependencies and plugins for Cucumber, TestNG, and the Maven Surefire plugin.
+
+xml
+Copy code
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-cucumber-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>7.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.4.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+Step 3: TestNG XML Configuration
+Create a testng.xml file in src/test/resources to configure TestNG to run your Cucumber tests.
+
+xml
+Copy code
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Cucumber Test Suite">
+    <test name="Cucumber Tests">
+        <classes>
+            <class name="com.example.runners.TestRunner" />
+        </classes>
+    </test>
+</suite>
+Step 4: Cucumber Test Runner
+Create a test runner class that extends AbstractTestNGCucumberTests.
+
+java
+Copy code
+package com.example.runners;
+
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
+@CucumberOptions(
+        features = "src/test/resources/features",
+        glue = "com.example.steps",
+        plugin = {"pretty", "html:target/cucumber-reports.html"},
+        monochrome = true
+)
+public class TestRunner extends AbstractTestNGCucumberTests {
+}
+Step 5: Step Definitions
+Create your step definitions in the com.example.steps package.
+
+java
+Copy code
+package com.example.steps;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+public class StepDefinitions {
+
+    @Given("a precondition")
+    public void aPrecondition() {
+        // Implement precondition
+    }
+
+    @When("an action is performed")
+    public void anActionIsPerformed() {
+        // Implement action
+    }
+
+    @Then("a postcondition is met")
+    public void aPostconditionIsMet() {
+        // Implement postcondition
+    }
+}
+Step 6: Feature File
+Create your feature file in src/test/resources/features.
+
+gherkin
+Copy code
+Feature: Example feature
+
+  Scenario: Example scenario
+    Given a precondition
+    When an action is performed
+    Then a postcondition is met
+Step 7: Running the Tests with Maven
+You can now run your Cucumber tests with the following Maven command:
+
+sh
+Copy code
+mvn clean test
+Summary
+Ensure your project structure is correct.
+Configure pom.xml with necessary dependencies and plugins.
+Create a testng.xml file to define your TestNG suite.
+Create a Cucumber test runner class.
+Write your step definitions.
+Create your feature file.
+Run your tests using the mvn clean test command.
+Following these steps will allow you to run Cucumber tests with TestNG and Maven from the command line.
+
+I've provided Cucumber options like cucumber.glue, cucumber.features in test runner file. But I want them to be passed from TestNG's xml file and those should be overwritten on test runner file contents. How can this be achieved?
+ChatGPT
+To pass Cucumber options like cucumber.glue and cucumber.features from TestNG's XML file and override the settings in the test runner file, you can use system properties in the TestNG XML file. In your test runner file, you'll then fetch these properties dynamically.
+
+Here's how you can achieve this:
+
+Step 1: Modify the Test Runner File
+Modify your test runner class to read Cucumber options from system properties. This way, if the properties are provided via the TestNG XML file, they will override the default settings in the runner class.
+
+java
+Copy code
+package com.example.runners;
+
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
+@CucumberOptions(
+        features = System.getProperty("cucumber.features", "src/test/resources/features"),
+        glue = System.getProperty("cucumber.glue", "com.example.steps"),
+        plugin = {"pretty", "html:target/cucumber-reports.html"},
+        monochrome = true
+)
+public class TestRunner extends AbstractTestNGCucumberTests {
+}
+Step 2: Create the TestNG XML File
+Specify the Cucumber options as system properties in the TestNG XML file. These properties will override the default values set in the runner file.
+
+xml
+Copy code
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Cucumber Test Suite">
+    <test name="Cucumber Tests">
+        <parameter name="cucumber.features" value="src/test/resources/features/alternate" />
+        <parameter name="cucumber.glue" value="com.example.alternatesteps" />
+        <classes>
+            <class name="com.example.runners.TestRunner" />
+        </classes>
+    </test>
+</suite>
+Step 3: Modify the Maven Surefire Plugin Configuration
+Ensure your pom.xml passes the system properties to the Maven Surefire plugin.
+
+xml
+Copy code
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <configuration>
+                <systemPropertyVariables>
+                    <cucumber.features>${cucumber.features}</cucumber.features>
+                    <cucumber.glue>${cucumber.glue}</cucumber.glue>
+                </systemPropertyVariables>
+                <suiteXmlFiles>
+                    <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                </suiteXmlFiles>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+Step 4: Running the Tests with Maven
+Run the Maven command with the system properties for Cucumber options. This will override the values specified in the test runner class.
+
+sh
+Copy code
+mvn clean test -Dcucumber.features=src/test/resources/features/alternate -Dcucumber.glue=com.example.alternatesteps
+Summary
+Modify the Test Runner File: Read Cucumber options from system properties.
+Create the TestNG XML File: Specify system properties for Cucumber options.
+Modify the Maven Surefire Plugin Configuration: Pass system properties to the Surefire plugin.
+Run the Tests with Maven: Use Maven command with system properties to override the default Cucumber options.
+By following these steps, you can dynamically pass Cucumber options from the TestNG XML file and ensure they override the settings specified in the test runner class.
+
+Explain meaning of System.getProperty("cucumber.features", "src/test/resources/features")
+ChatGPT
+The method System.getProperty("cucumber.features", "src/test/resources/features") is used to retrieve the value of a system property in Java. Here’s a detailed explanation of its components and how it works:
+
+Breakdown of the Method Call
+System.getProperty:
+
+This is a method provided by the System class in Java to fetch the value of a system property.
+"cucumber.features":
+
+This is the key or name of the system property you want to retrieve. In this context, it's a custom property presumably used to specify the location of Cucumber feature files.
+"src/test/resources/features":
+
+This is the default value that will be returned if the system property cucumber.features is not set. This means if no value is specified for cucumber.features, the method will return "src/test/resources/features".
+How It Works
+When the method System.getProperty("cucumber.features", "src/test/resources/features") is called:
+
+The Java runtime will look for a system property named cucumber.features.
+If it finds this property, it will return its value.
+If it does not find this property, it will return the default value provided, which is "src/test/resources/features".
+Example Usage
+This approach is useful for making your code configurable without hardcoding paths or other values. It allows you to change the behavior of your program by passing different values as system properties at runtime.
+
+Example Scenario in Cucumber Test Runner
+In the context of a Cucumber test runner class:
+
+java
+Copy code
+package com.example.runners;
+
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
+@CucumberOptions(
+        features = System.getProperty("cucumber.features", "src/test/resources/features"),
+        glue = System.getProperty("cucumber.glue", "com.example.steps"),
+        plugin = {"pretty", "html:target/cucumber-reports.html"},
+        monochrome = true
+)
+public class TestRunner extends AbstractTestNGCucumberTests {
+}
+How to Use with Maven and TestNG
+To provide system properties when running tests via Maven and TestNG, you can specify them in the testng.xml file and pass them as system properties in the Maven Surefire plugin configuration or directly via the command line.
+
+Via Maven Command Line
+You can override the default values by passing system properties as part of the Maven command:
+
+sh
+Copy code
+mvn clean test -Dcucumber.features=src/test/resources/features/alternate -Dcucumber.glue=com.example.alternatesteps
+Via TestNG XML and Maven Surefire Plugin
+TestNG XML File (src/test/resources/testng.xml):
+
+xml
+Copy code
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Cucumber Test Suite">
+    <test name="Cucumber Tests">
+        <parameter name="cucumber.features" value="src/test/resources/features/alternate" />
+        <parameter name="cucumber.glue" value="com.example.alternatesteps" />
+        <classes>
+            <class name="com.example.runners.TestRunner" />
+        </classes>
+    </test>
+</suite>
+Maven Surefire Plugin Configuration in pom.xml:
+
+xml
+Copy code
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <configuration>
+                <systemPropertyVariables>
+                    <cucumber.features>${cucumber.features}</cucumber.features>
+                    <cucumber.glue>${cucumber.glue}</cucumber.glue>
+                </systemPropertyVariables>
+                <suiteXmlFiles>
+                    <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                </suiteXmlFiles>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+Conclusion
+The System.getProperty("propertyName", "defaultValue") method is a powerful way to make your Java application configurable. It allows you to provide default values while giving you the flexibility to override them at runtime using system properties. This is especially useful in scenarios where you want to dynamically configure test paths or other settings without changing the code.
+
 Can we declare static variable as synchronized?
 ChatGPT
 In Java, the synchronized keyword cannot be directly applied to variable declarations, including static variables. However, you can achieve thread-safe access to static variables by synchronizing the code that accesses or modifies these variables.
