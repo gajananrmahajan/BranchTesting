@@ -1,103 +1,52 @@
-Intellij shortcut to take selected code on single line
+package com.example.utils;
 
-ChatGPT
-In IntelliJ IDEA, you can quickly move selected code onto a single line using the "Join Lines" action. The default shortcut for this is Ctrl + Shift + J on Windows/Linux and Cmd + Shift + J on macOS.
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
-Here's how you can do it:
+public class ApiPropertiesUtils {
 
-Select the lines of code you want to join into a single line.
-Press Ctrl + Shift + J (Windows/Linux) or Cmd + Shift + J (macOS).
-This action will merge the selected lines into one, removing any unnecessary spaces and keeping the code format intact.
+    // Load properties from a file and set them as system properties
+    public static void loadPropertiesAsSystemProperties(String propertiesFilePath) {
+        Properties properties = new Properties();
 
-resultSet.next() meaning in Java program for DB
-ChatGPT
-The resultSet.next() method in Java is used when working with the ResultSet interface, which is part of the JDBC API. This method is crucial for iterating over the rows of data retrieved from a database.
+        try (FileInputStream input = new FileInputStream(propertiesFilePath)) {
+            // Load the properties from the file
+            properties.load(input);
 
-Explanation:
-ResultSet Interface: Represents the result set of a database query.
-next() Method: Moves the cursor forward one row from its current position.
-Usage:
-Initial Position: Before the first row. When a ResultSet object is first created, its cursor is positioned before the first row.
-Iteration: Calling next() moves the cursor to the next row. If the next row exists, it returns true; otherwise, it returns false.
-Example:
-java
-Copy code
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
-public class Example {
-    public static void main(String[] args) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            // Load the JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Establish a connection to the database
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "username", "password");
-
-            // Create a statement object
-            statement = connection.createStatement();
-
-            // Execute a query and get the result set
-            resultSet = statement.executeQuery("SELECT * FROM mytable");
-
-            // Iterate over the result set
-            while (resultSet.next()) {
-                // Retrieve data by column name or index
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-
-                // Process the data
-                System.out.println("ID: " + id + ", Name: " + name);
+            // Set each property as a system property
+            for (String key : properties.stringPropertyNames()) {
+                String value = properties.getProperty(key);
+                System.setProperty(key, value);
             }
-        } catch (Exception e) {
+
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            // Close resources
-            try { if (resultSet != null) resultSet.close(); } catch (Exception e) { e.printStackTrace(); }
-            try { if (statement != null) statement.close(); } catch (Exception e) { e.printStackTrace(); }
-            try { if (connection != null) connection.close(); } catch (Exception e) { e.printStackTrace(); }
         }
     }
+
+    // Get a system property value by key
+    public static String getProperty(String key) {
+        return System.getProperty(key);
+    }
+
+    public static void main(String[] args) {
+        // Path to your properties file
+        String propertiesFilePath = "path/to/config.properties";
+
+        // Load the properties file and set the properties as system properties
+        loadPropertiesAsSystemProperties(propertiesFilePath);
+
+        // Example: Access a property
+        String apiKey = getProperty("x.ab.api.key");
+        String dbUrl = getProperty("database.url");
+        String dbUsername = getProperty("database.username");
+        String dbPassword = getProperty("database.password");
+
+        // Print the values to verify
+        System.out.println("API Key: " + apiKey);
+        System.out.println("Database URL: " + dbUrl);
+        System.out.println("Database Username: " + dbUsername);
+        System.out.println("Database Password: " + dbPassword);
+    }
 }
-Breakdown:
-Loading the JDBC Driver: Class.forName("com.mysql.cj.jdbc.Driver");
-Establishing Connection: Using DriverManager.getConnection().
-Creating Statement: connection.createStatement().
-Executing Query: statement.executeQuery("SELECT * FROM mytable");
-Iterating Result Set:
-while (resultSet.next()) { ... }: Continues until there are no more rows.
-resultSet.getInt("id") and resultSet.getString("name"): Retrieve data from the current row.
-Closing Resources: Ensuring all resources are properly closed in the finally block.
-This method is essential for traversing the data retrieved from a database query and processing each row accordingly.
-
-Explain auth token in simple words
-ChatGPT
-An auth token, or authentication token, is a digital key that allows users to access systems or services securely. Here’s a simple breakdown:
-
-Purpose: Auth tokens are used to verify that a user is who they claim to be without requiring them to re-enter their login credentials multiple times.
-
-How It Works:
-
-Login: When you log in to a service (like a website or an app), the system verifies your identity using your username and password.
-Token Issuance: Once verified, the system generates an auth token and sends it back to you.
-Using the Token: For subsequent requests (like accessing a page or API), you include the auth token instead of your username and password.
-Validation: The system checks the token to ensure it is valid and then grants you access.
-Analogy: Think of an auth token as a movie ticket. You buy the ticket once (login) and then show it to enter the theater and watch movies (access services) without having to buy another ticket each time you switch theaters.
-
-Security:
-
-Expiry: Tokens often have an expiration time, after which they become invalid.
-Revocation: Tokens can be revoked if needed (like changing your password).
-In summary, an auth token is a secure, temporary key that simplifies the process of accessing digital services by replacing repeated logins with a single, reusable credential.
-
-
-
-
-
-
