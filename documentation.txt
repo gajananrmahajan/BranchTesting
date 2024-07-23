@@ -1,276 +1,332 @@
-
-Capability meaning with simple example
-
 ChatGPT
-A capability is a skill, ability, or function that an individual, organization, or system can perform. Here's a simple example to illustrate this concept:
+"Feed" can refer to a few different things depending on the context, but here are some simple explanations for common uses of the word:
 
-Example
-Capability: Cooking
+Social Media Feed: A list of updates or posts from people you follow or from other sources, shown in a continuous stream on social media platforms like Facebook, Twitter, or Instagram. It's where you see the latest photos, status updates, and other content.
 
-Description: The ability to prepare food by combining ingredients and applying heat.
+Animal Feed: Food given to animals, especially livestock and pets. It's what animals eat to get their nutrition.
 
-Simple Example:
+News Feed: A list of news articles or updates from various sources, often shown in an app or on a website, giving you the latest news.
 
-Individual with Capability: Sarah knows how to cook.
-Task: Make a simple meal.
-Action: Sarah gathers ingredients, follows a recipe, and cooks spaghetti.
-Result: Sarah successfully prepares a delicious spaghetti dish.
-In this example, Sarah's capability is cooking. She uses this capability to complete the task of making a meal.
+Data Feed: A stream of data provided continuously from one system to another, often used in finance, technology, and other fields where real-time data is important.
 
-Please explain Epic, Feature and User Story with simple examples in context of software development
+Explain data profiling in simple words
 ChatGPT
-Sure, here are simple explanations and examples of an Epic, Feature, and User Story in the context of software development:
+Data profiling is the process of examining data from an existing source to understand its structure, content, and quality. Here's a simple way to explain it:
 
-Epic
-An Epic is a large body of work that can be broken down into smaller tasks or User Stories. It represents a significant deliverable in the project.
+Imagine you have a big book full of information. Data profiling is like going through the book to see what kind of information it has, how it's organized, and if there are any mistakes or missing parts. You might count how many pages there are, check if all the chapters are in the right order, and see if any pages are torn or blank.
 
-Example:
+In a similar way, when you profile data, you look at things like:
 
-Epic: Develop a Mobile Banking App
-This Epic involves creating a full-fledged mobile application for a bank, including various functionalities like account management, transaction history, money transfers, etc.
-Feature
-A Feature is a distinct piece of functionality that delivers value to the end-users. It is a subset of an Epic and can be further broken down into User Stories.
+How many records (like rows in a table) there are.
+What types of data are in each column (numbers, dates, text, etc.).
+If there are any missing or incorrect values.
+How the data is distributed (for example, how many times each value appears).
+This helps you understand the data better and figure out how to use it effectively.
 
-Example:
-
-Feature: Implement Money Transfer Functionality
-This feature focuses on enabling users to transfer money between accounts within the mobile banking app.
-User Story
-A User Story is a short, simple description of a feature or requirement from the perspective of an end-user. It outlines what the user wants and why.
-
-Example:
-
-User Story: As a user, I want to transfer money to another account so that I can send funds to my friends and family.
-This User Story breaks down the Money Transfer Feature into a specific requirement, highlighting what the user wants to achieve and the benefit they gain from it.
-Putting It All Together
-Epic: Develop a Mobile Banking App
-Feature: Implement Money Transfer Functionality
-User Story 1: As a user, I want to transfer money to another account so that I can send funds to my friends and family.
-User Story 2: As a user, I want to view a confirmation of my money transfer so that I know it was successful.
-User Story 3: As a user, I want to save frequent transfer recipients so that I can transfer money quickly in the future.
-In this way, an Epic is a big project, a Feature is a part of that project, and a User Story is a detailed requirement for that Feature.
-
-Explain Sprint grooming with simple words
+When used utility class with static methods, there are random failures when tests are run in parallel which execute these static methods. How to handle this random failure? This is with Java code.
 ChatGPT
-Sprint grooming, also known as backlog grooming or backlog refinement, is a meeting where the team reviews and prioritizes the tasks (user stories, bugs, etc.) in the backlog to prepare for the upcoming sprint. It ensures that the backlog is up-to-date and that the most important tasks are ready to be worked on.
+Random failures in tests that run in parallel and invoke static methods in a utility class often occur due to shared state or lack of thread safety. Here are some strategies to handle these issues:
 
-Simple Explanation:
-Purpose: To review, update, and prioritize tasks in the backlog.
-Participants: Product owner, scrum master, and the development team.
-Activities:
-Reviewing tasks: Looking at the tasks and making sure they are clear and still relevant.
-Estimating effort: Assigning effort estimates to tasks to understand how much work is involved.
-Prioritizing tasks: Deciding which tasks are most important and should be worked on first.
-Clarifying details: Making sure all team members understand the tasks and have the information they need.
-Simple Example:
-Imagine a team is developing a new feature for their app. In a sprint grooming session, they might:
+1. Ensure Thread Safety
+Make sure that your static methods are thread-safe. This means they should not modify shared data in a way that could cause race conditions. Here are a few ways to achieve thread safety:
 
-Review tasks: Look at a task like "Add a search bar to the app."
-Estimate effort: Decide it will take about 3 days of work.
-Prioritize: Determine if it's more important than other tasks like "Fix login bug."
-Clarify details: Ensure everyone knows what the search bar should look like and how it should function.
-By the end of the grooming session, the team has a clear, prioritized list of tasks that are ready to be worked on in the next sprint.
+Avoid Shared State: Ensure that static methods do not modify static fields or shared objects. If they need to use shared resources, use local variables within the methods.
 
-Explain following software testing environments - INT, SYS, SIT, UAT
+Synchronization: Use synchronization mechanisms like synchronized blocks or methods to control access to shared resources.
+
+java
+Copy code
+public class UtilityClass {
+    private static final Object lock = new Object();
+
+    public static void threadSafeMethod() {
+        synchronized (lock) {
+            // Code that needs to be thread-safe
+        }
+    }
+}
+Concurrent Data Structures: Use thread-safe data structures from the java.util.concurrent package, such as ConcurrentHashMap, CopyOnWriteArrayList, etc.
+
+2. Immutable Data
+Design your utility methods to work with immutable data. Immutable objects are inherently thread-safe because their state cannot be changed after they are created.
+
+3. Stateless Methods
+Ensure that your static methods are stateless. Stateless methods do not rely on any internal state and only work with the parameters passed to them.
+
+4. Use ThreadLocal
+If you need to maintain some state that is specific to the current thread, consider using ThreadLocal. This provides each thread with its own instance of a variable.
+
+java
+Copy code
+public class UtilityClass {
+    private static final ThreadLocal<MyObject> threadLocal = ThreadLocal.withInitial(MyObject::new);
+
+    public static MyObject getThreadLocalObject() {
+        return threadLocal.get();
+    }
+}
+5. Isolate Tests
+If the static methods inherently need shared state, consider isolating tests to run them in a sequential manner rather than in parallel. You can configure your test framework to run certain tests sequentially.
+
+For JUnit 5:
+
+Disable Parallel Execution for Specific Tests: Use @Execution(ExecutionMode.SAME_THREAD) to disable parallel execution for specific test classes or methods.
+
+java
+Copy code
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+@Execution(ExecutionMode.SAME_THREAD)
+public class MyTest {
+    // Test methods
+}
+Configure Parallelism: You can configure parallel execution settings in junit-platform.properties.
+
+properties
+Copy code
+junit.jupiter.execution.parallel.enabled = true
+junit.jupiter.execution.parallel.config.strategy = dynamic
+junit.jupiter.execution.parallel.config.dynamic.factor = 1
+6. Mocking and Dependency Injection
+Consider refactoring your code to use dependency injection so that you can mock dependencies in your tests, reducing the need for static methods.
+
+Example Refactor
+If a static method relies on some shared state or resource, consider refactoring it to a non-static method and use dependency injection:
+
+java
+Copy code
+public class UtilityClass {
+    private final SharedResource sharedResource;
+
+    public UtilityClass(SharedResource sharedResource) {
+        this.sharedResource = sharedResource;
+    }
+
+    public void instanceMethod() {
+        // Use sharedResource in a thread-safe manner
+    }
+}
+In your tests, you can then mock SharedResource and inject it into UtilityClass.
+
+By applying these strategies, you can reduce or eliminate the random failures when running parallel tests that involve static methods in utility classes.
+
+Things to consider from naming a file to contents, format etc of file while creating Utility class in Java
 ChatGPT
-Sure! Here are explanations of the INT, SYS, SIT, and UAT software testing environments:
+When creating a utility class in Java, several aspects need to be considered, from naming the file to the contents and format. Here's a comprehensive guide:
 
-INT (Integration Testing Environment)
-Purpose: To test the integration of different modules or components to ensure they work together as expected.
-Activities:
+Naming the File and Class
+Meaningful Name: The class name should clearly describe its purpose. Common suffixes include Utils, Helper, or Utility. For example:
 
-Verifying data flow between modules.
-Checking the interactions between integrated components.
-Identifying any interface defects between modules.
-Example: If you have a login module and a user profile module, you would test to ensure that logging in correctly loads the user profile.
+StringUtils for utility methods related to String operations.
+DateHelper for utility methods related to date manipulation.
+MathUtility for mathematical utility methods.
+CamelCase: Use CamelCase for the class name, starting with an uppercase letter.
 
-SYS (System Testing Environment)
-Purpose: To test the complete and integrated system to ensure it meets the specified requirements.
-Activities:
+java
+Copy code
+public class StringUtils {
+    // Utility methods
+}
+Package Naming
+Standard Conventions: Use lower case for package names, and follow your organization's or project's naming conventions.
 
-Conducting end-to-end testing of the entire application.
-Validating both functional and non-functional requirements.
-Testing the system as a whole rather than individual parts.
-Example: Testing a banking application to ensure all features (login, transfer money, view balance) work as intended within the complete system.
+java
+Copy code
+package com.example.utils;
+Logical Grouping: Group utility classes in a common package, like utils, helpers, or common.
 
-SIT (System Integration Testing Environment)
-Purpose: To test the interactions between different systems and their components in a controlled environment.
-Activities:
+File Contents
+Class Declaration: The utility class should be declared as final to prevent inheritance, and it should have a private constructor to prevent instantiation.
 
-Testing interfaces between different systems.
-Verifying the data exchange and communication between systems.
-Ensuring that integrated systems function together correctly.
-Example: Ensuring that a retail application correctly processes payments through an external payment gateway.
+java
+Copy code
+public final class StringUtils {
+    private StringUtils() {
+        // Prevent instantiation
+    }
+    // Utility methods
+}
+Static Methods: Utility methods should be static because they are intended to be used without creating an instance of the class.
 
-UAT (User Acceptance Testing Environment)
-Purpose: To validate the system from the end-user’s perspective to ensure it meets their requirements and is ready for production.
-Activities:
+java
+Copy code
+public static String capitalize(String str) {
+    if (str == null || str.isEmpty()) {
+        return str;
+    }
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+}
+Javadoc Comments: Document each method with Javadoc comments to describe its purpose, parameters, return value, and any exceptions thrown.
 
-Conducting testing based on real-world scenarios.
-Getting feedback from actual users or stakeholders.
-Ensuring that the system is user-friendly and meets business needs.
-Example: End-users testing an e-commerce website to ensure they can search for products, add them to the cart, and complete the checkout process smoothly.
+java
+Copy code
+/**
+ * Capitalizes the first letter of the given string.
+ *
+ * @param str the string to capitalize
+ * @return the capitalized string
+ */
+public static String capitalize(String str) {
+    // Method implementation
+}
+Consistent Formatting: Follow a consistent code style for indentation, braces, spacing, etc. Use an IDE or a formatter tool to maintain consistency.
 
-Summary
-INT (Integration Testing Environment): Focuses on the integration of individual modules.
-SYS (System Testing Environment): Tests the entire system as a whole.
-SIT (System Integration Testing Environment): Ensures different systems and their components work together.
-UAT (User Acceptance Testing Environment): Validates the system from the end-user's perspective to ensure it meets their needs.
-inadvertently meaning in Marathi
+Method Design
+Keep Methods Focused: Each method should perform a single, well-defined task.
+
+Parameter Validation: Validate input parameters to handle edge cases and avoid runtime errors.
+
+java
+Copy code
+public static boolean isNullOrEmpty(String str) {
+    return str == null || str.isEmpty();
+}
+Return Types: Choose appropriate return types that make the methods easy to use and understand.
+
+Error Handling: Handle exceptions gracefully and document any exceptions that the method might throw.
+
+File Format and Organization
+Imports: Only import necessary classes and packages. Avoid wildcard imports.
+
+java
+Copy code
+import java.util.Objects;
+Organize Methods Logically: Group related methods together and consider using sections with comments to separate different groups of methods.
+
+java
+Copy code
+// String utility methods
+public static String capitalize(String str) {
+    // Method implementation
+}
+
+public static boolean isNullOrEmpty(String str) {
+    // Method implementation
+}
+
+// Date utility methods
+public static String formatDate(Date date) {
+    // Method implementation
+}
+Maintainability: Write clean, readable code that is easy to maintain. Avoid overly complex logic within utility methods.
+
+Example Utility Class
+Here’s an example of a well-structured utility class:
+
+java
+Copy code
+package com.example.utils;
+
+import java.util.Objects;
+
+/**
+ * Utility class for String operations.
+ */
+public final class StringUtils {
+
+    // Private constructor to prevent instantiation
+    private StringUtils() {
+        throw new UnsupportedOperationException("Utility class should not be instantiated");
+    }
+
+    /**
+     * Capitalizes the first letter of the given string.
+     *
+     * @param str the string to capitalize
+     * @return the capitalized string, or null if the input is null
+     */
+    public static String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    /**
+     * Checks if a string is null or empty.
+     *
+     * @param str the string to check
+     * @return true if the string is null or empty, false otherwise
+     */
+    public static boolean isNullOrEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
+
+    // Add more utility methods as needed
+}
+By following these guidelines, you can create utility classes that are well-organized, easy to understand, and maintainable.
+
+Significance meaning in Marathi
 ChatGPT
-"Inadvertently" in Marathi can be translated as "न अजानता" (na ajanta) or "नादानपणे" (nadanpane). It means something done unintentionally or without deliberate intent.
+In Marathi, the word "significance" can be translated to "महत्त्व" (mahatva). It refers to the importance or meaning of something. For example, if you say "The significance of education," you can translate it to "शिक्षणाचे महत्त्व."
 
-Example:
-
-"He inadvertently forgot his keys at home."
-Marathi: "त्याने नादानपणे त्याची किल्ली घरी विसरली."
-Refine meaning in Marathi
+Audit meaning in Marathi
 ChatGPT
-"Refine" in Marathi can be translated as "शुद्ध करणे" (shuddha karne) or "सुधारणे" (sudharne). It means to make something pure, improved, or more precise.
+In Marathi, the word "audit" can be translated to "लेखा परीक्षण" (lekha parīkṣaṇ) or simply "परीक्षण" (parīkṣaṇ). It refers to the systematic examination and verification of financial records or other processes to ensure accuracy and compliance. For example, "The company is undergoing an audit" can be translated to "कंपनीचे लेखा परीक्षण चालू आहे."
 
-Example:
-
-"The process is used to refine sugar."
-
-Marathi: "साखर शुद्ध करण्यासाठी ही प्रक्रिया वापरली जाते."
-"They refined the design based on user feedback."
-
-Marathi: "वापरकर्त्यांच्या प्रतिसादावर आधारित त्यांनी डिझाइन सुधारले."
-What is TLA meant?
+Visionary meaning in Marathi
 ChatGPT
-TLA stands for "Three-Letter Acronym." It refers to any acronym or abbreviation composed of three letters. TLAs are commonly used in various fields to simplify complex terms or phrases.
+In Marathi, the word "visionary" can be translated to "दूरदर्शी" (dūrdarśī). It refers to someone who has the ability to see and plan for the future with imagination and wisdom. For example, "He is a visionary leader" can be translated to "तो दूरदर्शी नेता आहे."
 
-Examples of TLAs:
-CPU: Central Processing Unit
-RAM: Random Access Memory
-URL: Uniform Resource Locator
-API: Application Programming Interface
-In summary, a TLA is just a three-letter abbreviation used to represent a longer term or phrase.
+We've API tests to automate where we've written API endpoints automation and through output JSON, we validate necessary things. But other team is forcing us to do same validations by making database queries.
 
-Explain telemetry in simple words
+Actually internally output being returned by API calls, make DB calls to get data which I think unnecessary calls and which will increase execution time.
+
+Do you suggest if validations by making DB queries should be added in automation even though same things are being validated by API calls?
 ChatGPT
-Telemetry is a way to automatically collect data from remote or inaccessible locations and send it to a central location for monitoring and analysis.
+When deciding whether to include database query validations in your API automation tests, consider the following factors:
 
-Simple Explanation:
-Imagine you have a weather station on a mountain. Instead of going up the mountain every day to check the temperature, wind speed, and humidity, the weather station automatically sends this data to your computer at home. This process of collecting and sending data is called telemetry.
+Pros and Cons of Database Query Validations
+Pros:
+Data Integrity Verification:
 
-Key Points:
-Automatic Data Collection: Telemetry systems automatically gather information without needing someone to manually collect it.
-Remote Locations: Telemetry is especially useful for places that are hard to reach or dangerous to visit frequently.
-Data Transmission: The collected data is sent to a central location where it can be monitored and analyzed.
-Example:
-Space Missions: Spacecraft use telemetry to send information about their status and environment back to Earth, allowing scientists to monitor and control the mission from a distance.
-In essence, telemetry makes it possible to monitor and manage systems and environments from afar, saving time and increasing safety.
+Validating data directly from the database ensures that the data stored is accurate and as expected.
+It helps catch issues where the API might be returning the correct data, but the database itself might have inconsistencies or incorrect data.
+Full Coverage:
 
-tone meaning in Marathi
-ChatGPT
-"Tone" in Marathi can be translated as "स्वर" (swar) or "भावना" (bhavana), depending on the context. It generally refers to the quality, pitch, or emotion conveyed in a sound or voice.
+Adding database queries ensures that you're covering both the API layer and the data layer, providing a more comprehensive test coverage.
+Detection of Intermediate Errors:
 
-Examples:
-Musical Tone:
+Sometimes, errors can occur between the database and the API layer. Direct database validations can help catch such issues.
+Cons:
+Increased Complexity:
 
-English: The musician played a high tone on the flute.
-Marathi: संगीतकाराने बासरीवर उच्च स्वर वाजवला.
-Voice Tone:
+Adding database queries increases the complexity of the test scripts. You need to manage database connections, query construction, and result validation.
+Longer Execution Time:
 
-English: She spoke in a calm and soothing tone.
-Marathi: तिने शांत आणि सुखदायक स्वरात बोलली.
-Emotional Tone:
+Querying the database in addition to making API calls will increase the overall execution time of your test suite, potentially leading to longer feedback cycles.
+Maintenance Overhead:
 
-English: The tone of the letter was very serious.
-Marathi: पत्राचा भाव खूप गंभीर होता.
-In summary, "tone" in Marathi can be understood as "स्वर" when referring to sound or pitch and "भावना" when referring to the emotional quality of communication.
+Any changes in the database schema may require updates to your test scripts, increasing the maintenance overhead.
+Potential Redundancy:
 
-Governance meaning in Marathi
-ChatGPT
-"Governance" in Marathi can be translated as "शासन" (shasan) or "शासन व्यवस्था" (shasan vyavastha). It refers to the way in which a country, organization, or group is managed at the highest level, and the processes and systems used to control and make decisions.
+If the API calls already validate the necessary data and those calls internally fetch data from the database, adding direct database queries might be redundant.
+Recommendations
+Critical Path Validations:
 
-Examples:
-Country Governance:
+Use database queries for critical path validations where data integrity is crucial. For example, financial transactions, user authentication, etc.
+Selective Database Validations:
 
-English: Good governance is essential for the development of the country.
-Marathi: देशाच्या विकासासाठी चांगले शासन आवश्यक आहे.
-Corporate Governance:
+Instead of querying the database for every API call, identify a subset of critical tests where direct database validation would add the most value.
+Layered Approach:
 
-English: The company improved its governance to ensure transparency and accountability.
-Marathi: कंपनीने पारदर्शकता आणि जबाबदारी सुनिश्चित करण्यासाठी तिच्या शासन व्यवस्थेत सुधारणा केली.
-School Governance:
+Combine API tests with database validations for end-to-end testing. For instance, run API tests for functional validation and have a separate set of integration or data integrity tests that query the database.
+Performance Considerations:
 
-English: The school's governance body makes all the important decisions regarding policies.
-Marathi: शाळेची शासन व्यवस्था सर्व महत्वाच्या धोरणात्मक निर्णय घेते.
-When to use - only and itself - at the end of english statements?
-ChatGPT
-Using "Only" and "Itself" at the End of English Statements
-"Only"
-"Only" is used to emphasize that something is limited to the mentioned subject or object and not involving anything else.
+Ensure that the addition of database queries does not excessively slow down your test execution. Optimize your queries and consider running database validations in parallel if possible.
+Regular Audits:
 
-Examples:
+Regularly review the necessity of database queries in your tests. Remove redundant checks that don't add significant value.
+Conclusion
+While validating directly via API calls is often sufficient, incorporating selective database queries can enhance the robustness of your testing strategy. It's essential to strike a balance between comprehensive coverage and maintaining efficient, manageable test suites. Here’s a possible approach:
 
-Emphasizing a subject or action:
+API Tests: Continue validating the output JSON for functional correctness.
+Database Tests: Add critical database validations for data integrity and consistency.
+Integration Tests: Periodically run tests that validate both API responses and database state, especially after major changes.
+By adopting a balanced approach, you ensure that your tests are thorough without unnecessary redundancy or performance degradation.
 
-"She loves classical music only."
-Meaning: She does not love any other type of music.
-Limiting a condition:
 
-"The meeting is for managers only."
-Meaning: No one else except managers can attend the meeting.
-Focusing on timing or amount:
-
-"He arrived only a minute ago."
-Meaning: He arrived just a minute ago, not earlier.
-"Itself"
-"Itself" is used to emphasize the subject or object itself, indicating that the focus is on the intrinsic nature or the thing in question alone, without external factors.
-
-Examples:
-
-Emphasizing the subject's inherent qualities:
-
-"The machine operates by itself."
-Meaning: The machine operates independently, without needing assistance.
-Highlighting the subject alone:
-
-"The book itself is not very interesting, but the illustrations are beautiful."
-Meaning: The book alone is not interesting, though there are other elements like illustrations that are beautiful.
-Indicating the focus on the object in isolation:
-
-"The problem itself is not difficult, but finding a solution is time-consuming."
-Meaning: The problem on its own is easy, but solving it takes time.
-Summary
-Use "only" to limit or restrict the statement to just the mentioned subject or object.
-Use "itself" to emphasize the inherent nature or focus on the subject or object alone, without external influences.
-By understanding these subtle differences, you can use "only" and "itself" to add precision and emphasis to your statements.
-
-Toggle meaning in Marathi
-ChatGPT
-"Toggle" in Marathi can be translated as "स्विच करणे" (switch karne) or "बदला करणे" (badal karne). It means to switch between two states or options.
-
-Examples:
-In a software context:
-
-English: Click the button to toggle between dark mode and light mode.
-Marathi: बटणावर क्लिक करून डार्क मोड आणि लाइट मोडमध्ये स्विच करा.
-In a hardware context:
-
-English: Use the switch to toggle the light on and off.
-Marathi: लाईट चालू आणि बंद करण्यासाठी स्विच वापरा.
-In summary, "toggle" means to switch back and forth between two states or options, and it can be translated as "स्विच करणे" or "बदला करणे" in Marathi.
-
-Explain Crowdstrike software in simple words.
-ChatGPT
-CrowdStrike is a cybersecurity software company that provides protection against cyber threats.
-
-Simple Explanation:
-CrowdStrike makes software that helps protect computers and networks from hackers and viruses. It detects, stops, and prevents attacks in real-time.
-
-Key Features:
-Threat Detection: Identifies suspicious activities and potential threats quickly.
-Real-Time Protection: Monitors systems continuously to stop attacks as they happen.
-Cloud-Based: Uses the internet to provide updates and analyze threats without needing to install heavy software on each computer.
-Incident Response: Helps organizations respond to and recover from cyber attacks.
-Example:
-Imagine you have a security guard who watches over your house 24/7. If someone tries to break in, the guard stops them immediately and also checks for any other vulnerabilities in your house. CrowdStrike software acts like this guard, but for your computer systems and data.
-
-In simple terms, CrowdStrike helps keep your digital world safe from cyber criminals by constantly watching, detecting, and stopping any malicious activities.
 
 
 
